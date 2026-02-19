@@ -15,7 +15,7 @@ func TestGenerateRandomElements(t *testing.T) {
 	}{
 		{name: "nil", size: 0, result: 0},
 		{name: "one", size: 1, result: 1},
-		{name: "negetive", size: -15, result: 0},
+		{name: "negative", size: -15, result: 0},
 		{name: "normal", size: 354, result: 354},
 	}
 
