@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"sort"
 	"sync"
 	"time"
 )
@@ -19,7 +18,7 @@ func generateRandomElements(size int) []int {
 	// ваш код здесь
 	if size <= 0 {
 		fmt.Print(errors.New("incorrect size"))
-		return []int{}
+		return nil
 	}
 	v := make([]int, size)
 	rand.Seed(time.Now().UnixNano())
@@ -36,8 +35,13 @@ func maximum(data []int) int {
 		fmt.Print(errors.New("empty slice"))
 		return 0
 	}
-	sort.Ints(data)
-	return data[len(data)-1]
+	max := data[0]
+	for _, num := range data[1:] {
+		if num > max {
+			max = num
+		}
+	}
+	return max
 }
 
 // maxChunks returns the maximum number of elements in a chunks.
@@ -51,11 +55,13 @@ func maxChunks(data []int) int {
 	var wg sync.WaitGroup
 	maxElem := make([]int, CHUNKS)
 
+	lenDivChun := len(data) / CHUNKS
+
 	for i := 0; i < CHUNKS; i++ {
 		wg.Add(1)
 
-		partStart := len(data) / CHUNKS * i
-		partEnd := partStart + len(data)/CHUNKS
+		partStart := lenDivChun * i
+		partEnd := partStart + lenDivChun
 
 		if i == CHUNKS-1 {
 			partEnd = len(data)
@@ -80,7 +86,7 @@ func main() {
 	// ваш код здесь
 	timeStart := time.Now()
 	max := maximum(rndElem)
-	elapsed := time.Now().Sub(timeStart).Microseconds()
+	elapsed := time.Since(timeStart).Microseconds()
 
 	fmt.Printf("Максимальное значение элемента: %d\nВремя поиска: %d ms\n", max, elapsed)
 
@@ -88,7 +94,7 @@ func main() {
 	// ваш код здесь
 	timeStart = time.Now()
 	max = maxChunks(rndElem)
-	elapsed = time.Now().Sub(timeStart).Microseconds()
+	elapsed = time.Since(timeStart).Microseconds()
 
 	fmt.Printf("Максимальное значение элемента: %d\nВремя поиска: %d ms\n", max, elapsed)
 }
